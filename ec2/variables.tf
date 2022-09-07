@@ -1,4 +1,9 @@
 variable "ec2_name" {
   type    = string
-  default = "lam.mv_test"
+  description = "Name of EC2"
+}
+
+variable "instance_type" {
+  type = string
+  description = "Instance type of the EC2"
 }
