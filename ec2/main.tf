@@ -9,12 +9,23 @@ terraform {
   required_version = ">= 1.2.0"
 }
 
+data "aws_ami" "ubuntu" { // lấy data từ aws
+  most_recent = true
+
+  filter {
+    name   = "name"
+    values = ["ubuntu/images/hvm-ssd/ubuntu-focal-20.04-amd64-server-*"]
+  }
+
+  owners = ["099720109477"] # Canonical Ubuntu AWS account id
+}
+
 provider "aws" {
   region = "us-west-2"
 }
 
 resource "aws_instance" "app_server" {
-  ami           = "ami-830c94e3"
+  ami           = data.aws_ami.ubuntu.id // lấy giá trị từ data được trả về từ aws
   instance_type = "t2.micro"
 
   tags = {
