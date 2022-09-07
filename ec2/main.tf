@@ -25,6 +25,7 @@ provider "aws" {
 }
 
 resource "aws_instance" "app_server" {
+  count         = 1
   ami           = data.aws_ami.ubuntu.id // lấy giá trị từ data được trả về từ aws
   instance_type =  var.instance_type
 
