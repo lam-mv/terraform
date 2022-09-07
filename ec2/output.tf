@@ -1,5 +1,5 @@
 output "ec2" {
   value = {
-    public_ip = aws_instance.app_server.public_ip
+    public_ip = [ for v in aws_instance.app_server : v.public_ip]
   }
 }
