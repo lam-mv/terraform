@@ -1,28 +1,21 @@
-provider "aws" {
-  region = "us-west-2"
-}
+
 
 resource "aws_vpc" "vpc" {
-  cidr_block = "10.0.0.0/16"
+  cidr_block = var.vpc_cidr_block
   enable_dns_hostnames = true
   
     tags = {
-    "Name" = "mvl_vpc"
+      "Name" = "mvl_vpc"
   }
 }
 
-locals {
-  private = ["10.0.1.0/24", "10.0.2.0/24", "10.0.3.0/24"]
-  public = ["10.0.4.0/24", "10.0.5.0/24", "10.0.6.0/24"]
-  zone   = ["us-west-2a", "us-west-2b", "us-west-2c"]
-}
 
 resource "aws_subnet" "private_subnet" {
-  count = length(local.private)
+  count = length(var.private_subnet)
   
   vpc_id     = aws_vpc.vpc.id
-  cidr_block = locals.private[count.index]
-  availability_zone = locals.zone[count.index % length(local.zone)]
+  cidr_block = var.private_subnet[count.index]
+  availability_zone = var.availability_zone[count.index % length(var.availability_zone)]
 
   tags = {
     "Name" = "private-subnet"
@@ -30,11 +23,11 @@ resource "aws_subnet" "private_subnet" {
 }
 
 resource "aws_subnet" "public_subnet" {
-  count = length(local.public)
+  count = length(var.public_subnet)
   
   vpc_id     = aws_vpc.vpc.id
-  cidr_block = locals.public[count.index]
-  availability_zone = locals.zone[count.index % length(local.zone)]
+  cidr_block = var.public_subnet[count.index]
+  availability_zone = var.availability_zone[count.index % length(var.availability_zone)]
   
   tags = {
     "Name" = "public-subnet"
