@@ -11,7 +11,7 @@ resource "aws_s3_bucket_policy" "policy" {
 }
 
 resource "aws_s3_bucket_website_configuration" "web-config" {
-  bucket = aws_s3_bucket.terraform-bucket
+  bucket = aws_s3_bucket.terraform-bucket.id
   index_document {
     suffix = "index.html"
   }
@@ -28,4 +28,9 @@ resource "aws_s3_object" "object" {
   source       = each.value
   etag         = filemd5("${each.value}")
   content_type = lookup(local.mime_types, split(".", each.value)[length(split(".", each.value)) - 1])
+}
+
+resource "aws_s3_bucket_acl" "acl" {
+  bucket = aws_s3_bucket.terraform-bucket.id
+  acl = "public-read"
 }
